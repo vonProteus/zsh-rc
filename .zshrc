@@ -116,19 +116,26 @@ prompt_end() {
 ### Prompt components
 # Each component will draw itself, and hide itself if no information needs to be shown
 
+# Root privileges
+prompt_root() {
+  if [[ $UID -eq 0 ]]; then
+    prompt_segment red yellow " %(!.%{%F{yellow}%}.)$LIGHTNING "
+  fi
+}
+
 # Different username
 prompt_user() {
   local user=`whoami`
 
-  if [[ "$user" != "$DEFAULT_USER" && "$user" != "root" ]]; then
-    prompt_segment $PRIMARY_FG default " %(!.%{%F{yellow}%}.)$user "
+  if [[ "$user" != "$DEFAULT_USER" && $UID -ne 0 ]]; then
+    prompt_segment magenta $PRIMARY_FG " %(!.%{%F{yellow}%}.)$user "
   fi
 }
 
-#Different host
+# Different host
 prompt_host() {
   if [[ -n "$SSH_CONNECTION" ]]; then
-    prompt_segment $PRIMARY_FG purple " %m "
+    prompt_segment cyan $PRIMARY_FG " %m "
   fi
 }
 
@@ -164,13 +171,11 @@ prompt_dir() {
 
 # Status:
 # - was there an error
-# - am I root
 # - are there background jobs?
 prompt_status() {
   local symbols
   symbols=()
   [[ $RETVAL -ne 0 ]] && symbols+="%{%F{red}%}$CROSS"
-  [[ $UID -eq 0 ]] && symbols+="%{%F{yellow}%}$LIGHTNING"
   [[ $(jobs -l | wc -l) -gt 0 ]] && symbols+="%{%F{cyan}%}$GEAR"
 
   [[ -n "$symbols" ]] && prompt_segment $PRIMARY_FG default " $symbols "
@@ -181,6 +186,7 @@ prompt_main() {
   RETVAL=$?
   CURRENT_BG='NONE'
   prompt_status
+  prompt_root
   prompt_user
   prompt_host
   prompt_dir
