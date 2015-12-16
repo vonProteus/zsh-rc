@@ -6,9 +6,11 @@
 DEFAULT_USER="nivertius"
 EDITOR="vim"
 
-#---------------------------------- Setup -------------------------------------
+#---------------------------------- Pre Setup ---------------------------------
 
 autoload colors; colors
+
+LAST_RETURN_VALUE=0
 
 #---------------------------------- Tab completion ----------------------------
 
@@ -175,15 +177,22 @@ prompt_dir() {
 prompt_status() {
   local symbols
   symbols=()
-  [[ $RETVAL -ne 0 ]] && symbols+="%{%F{red}%}$CROSS"
-  [[ $(jobs -l | wc -l) -gt 0 ]] && symbols+="%{%F{cyan}%}$GEAR"
-
-  [[ -n "$symbols" ]] && prompt_segment $PRIMARY_FG default " $symbols "
+  if [[ $LAST_RETURN_VALUE -ne 0 ]]; then
+  	symbols+="%{%F{red}%}$CROSS"
+	if [[ $LAST_RETURN_VALUE -ne 1 ]]; then
+		symbols+="$CROSS $CROSS"
+	fi
+  fi
+  if [[ $(jobs -l | wc -l) -gt 0 ]]; then
+  	symbols+="%{%F{cyan}%}$GEAR"
+  fi
+  if [[ -n "$symbols" ]]; then
+  	prompt_segment $PRIMARY_FG default " $symbols "
+  fi
 }
 
 ## Main prompt
 prompt_main() {
-  RETVAL=$?
   CURRENT_BG='NONE'
   prompt_status
   prompt_root
@@ -360,6 +369,14 @@ REPORTTIME=5
 # Don't glob with find or wget
 for command in find wget; \
     alias $command="noglob $command"
+
+#---------------------------------- Post Setup --------------------------------
+
+store_last_return_value() {
+	LAST_RETURN_VALUE="$?"
+}
+
+precmd_functions=(store_last_return_value $precmd_functions)
 
 #---------------------------------- Machine specific --------------------------
 
