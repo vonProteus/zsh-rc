@@ -70,8 +70,6 @@ export HISTFILE=~/.zsh_history
 export HISTSIZE=1000000
 export SAVEHIST=1000000
 
-
-
 #---------------------------------- Prompt ------------------------------------
 
 # Based on agnoster's Theme - https://gist.github.com/3712874
@@ -350,6 +348,10 @@ zle -N up-line-or-local-history
 
 bindkey "\e[A" up-line-or-local-history
 bindkey "\e[B" down-line-or-local-history
+
+#---------------------------------- Aliases ----------------------------------
+
+alias su="sudo -u root -i"
 
 #---------------------------------- Miscellaneous ---------------------------- 
 
