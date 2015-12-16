@@ -164,6 +164,13 @@ prompt_git() {
   fi
 }
 
+# show current time
+prompt_time() {
+  local current_date
+  current_date=`date +%R`
+  prompt_segment green $PRIMARY_FG " ${current_date} "
+}
+
 # Dir: current working directory
 prompt_dir() {
   prompt_segment blue $PRIMARY_FG ' %~ '
@@ -192,6 +199,7 @@ prompt_status() {
 ## Main prompt
 prompt_main() {
   CURRENT_BG='NONE'
+  prompt_time
   prompt_status
   prompt_root
   prompt_user
