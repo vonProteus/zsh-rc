@@ -22,10 +22,18 @@ GEAR="\u2699"
 BULLET="\u2022"
 CROSSING="\u292c"
 
-# Project in current directory
-MAVEN_PROJECT_ARTIFACT=""
-MAVEN_PROJECT_VERSION=""
+#--- Helpers
 
+find_up () {
+  path=$(pwd)
+  while [[ "$path" != "" ]]; do
+    if [[ -e "$path/$1" ]]; then
+    	echo "$path/$1"
+    	return;
+    fi
+    path=${path%/*}
+  done
+}
 
 #---------------------------------- Tab completion ----------------------------
 
@@ -398,19 +406,24 @@ mvn-color()
 }
 alias mvn='mvn-color'
 
-MAVEN_PROJECT_ARTIFACT=""
-MAVEN_PROJECT_VERSION=""
+# Read project into current directory
 
 maven_read_project() {
-	local pom_contents
-	if [[ ! -r "pom.xml" ]]; then
+	local location parts
+	location=$(find_up pom.xml)
+	if [[ ! -r "$location" ]]; then
 		MAVEN_PROJECT_ARTIFACT=""
 		MAVEN_PROJECT_VERSION=""
 		return 1;
 	fi
-	pom_contents=$(cat pom.xml)
-	MAVEN_PROJECT_ARTIFACT=$(xmllint --xpath "/*[local-name()='project']/*[local-name()='artifactId']/text()" - <<< "$pom_contents")
-	MAVEN_PROJECT_VERSION=$(xmllint --xpath "/*[local-name()='project']/*[local-name()='version']/text()" - <<< "$pom_contents")
+	parts=($(echo "cat /*[local-name()='project']/*[local-name()='artifactId']/text()\n" \
+				"cat /*[local-name()='project']/*[local-name()='version']/text()\n" \
+				"cat /*[local-name()='project']/*[local-name()='parent']/*[local-name()='version']/text()\n" | \
+		xmllint --shell $location | \
+		sed '/^\/ >/d' | \
+		sed '/^ -------/d'))
+	MAVEN_PROJECT_ARTIFACT=${parts[1]}
+	MAVEN_PROJECT_VERSION=${parts[2]}
 }
 
 add-zsh-hook chpwd maven_read_project
