@@ -73,6 +73,10 @@ zstyle ':completion:*' group-name ''
 zstyle ':completion:*' ignored-patterns '*?.pyc' '__pycache__'
 zstyle ':completion:*:*:rm:*:*' ignored-patterns
 
+# kill: advanced kill completion
+zstyle ':completion::*:kill:*:*' command 'ps xf -U $USER -o pid,%cpu,cmd'
+zstyle ':completion::*:kill:*:processes' list-colors '=(#b) #([0-9]#)*=0=01;32'
+
 zstyle :compinstall filename "$HOME/.zshrc"
 
 # Always do mid-word tab completion
