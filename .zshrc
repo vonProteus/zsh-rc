@@ -46,7 +46,7 @@ zstyle ':completion:*' group-name ''
 zstyle ':completion:*' ignored-patterns '*?.pyc' '__pycache__'
 zstyle ':completion:*:*:rm:*:*' ignored-patterns
 
-zstyle :compinstall filename '/home/eevee/.zshrc'
+zstyle :compinstall filename "$HOME/.zshrc"
 
 # Always do mid-word tab completion
 setopt complete_in_word
