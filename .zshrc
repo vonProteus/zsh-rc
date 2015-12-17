@@ -12,6 +12,15 @@ autoload colors; colors
 
 LAST_RETURN_VALUE=0
 
+# Characters
+PLUSMINUS="\u00b1"
+BRANCH="\ue0a0"
+DETACHED="\u27a6"
+CROSS="\u2718"
+LIGHTNING="\u26a1"
+GEAR="\u2699"
+BULLET="\u2022"
+
 #---------------------------------- Tab completion ----------------------------
 
 # Force a reload of completion system if nothing matched; this fixes installing
@@ -79,12 +88,6 @@ PRIMARY_FG=black
 
 # Characters
 SEGMENT_SEPARATOR="\ue0b0"
-PLUSMINUS="\u00b1"
-BRANCH="\ue0a0"
-DETACHED="\u27a6"
-CROSS="\u2718"
-LIGHTNING="\u26a1"
-GEAR="\u2699"
 
 # Begin a segment
 # Takes two arguments, background and foreground. Both can be omitted,
@@ -139,27 +142,12 @@ prompt_host() {
   fi
 }
 
-# Git: branch/detached head, dirty status
-prompt_git() {
-  local color ref
-  is_dirty() {
-    test -n "$(git status --porcelain --ignore-submodules)"
-  }
+# VCS status
+prompt_vcs() {
+  local ref
   ref="$vcs_info_msg_0_"
   if [[ -n "$ref" ]]; then
-    if is_dirty; then
-      color=yellow
-      ref="${ref} $PLUSMINUS"
-    else
-      color=green
-      ref="${ref} "
-    fi
-    if [[ "${ref/.../}" == "$ref" ]]; then
-      ref="$BRANCH $ref"
-    else
-      ref="$DETACHED ${ref/.../}"
-    fi
-    prompt_segment $color $PRIMARY_FG
+    prompt_segment yellow $PRIMARY_FG
     print -Pn " $ref"
   fi
 }
@@ -205,7 +193,7 @@ prompt_main() {
   prompt_user
   prompt_host
   prompt_dir
-  prompt_git
+  prompt_vcs
   prompt_end
 }
 
@@ -221,10 +209,23 @@ prompt_opts=(cr subst percent)
 
 add-zsh-hook precmd prompt_precmd
 
-zstyle ':vcs_info:*' enable git
-zstyle ':vcs_info:*' check-for-changes false
-zstyle ':vcs_info:git*' formats '%b'
-zstyle ':vcs_info:git*' actionformats '%b (%a)'
+#---------------------------------- VCS ---------------------------------------
+
+zstyle ':vcs_info:*' enable git hg svn
+zstyle ':vcs_info:*' check-for-changes true
+zstyle ':vcs_info:*' get-revision true
+
+zstyle ':vcs_info:*' formats "%s $BRANCH%b $BULLET%i%u"
+zstyle ':vcs_info:*' actionformats "%s $BRANCH%b $BULLET%i%u [%a]"
+zstyle ':vcs_info:*' branchformat '%b'
+
+zstyle ':vcs_info:hg*' unstagedstr "$PLUSMINUS"
+zstyle ':vcs_info:hg*' hgrevformat "%r" # default "%r:%h"
+
+zstyle ':vcs_info:git*' formats "%s $BRANCH%b%u"
+zstyle ':vcs_info:git*' actionformats "%s $BRANCH%b%u [%a]"
+zstyle ':vcs_info:git*' unstagedstr "$LIGHTNING"
+zstyle ':vcs_info:git*' stagedstr "$PLUSMINUS"
 
 #---------------------------------- Listings ----------------------------------
 
