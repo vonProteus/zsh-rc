@@ -20,6 +20,12 @@ CROSS="\u2718"
 LIGHTNING="\u26a1"
 GEAR="\u2699"
 BULLET="\u2022"
+CROSSING="\u292c"
+
+# Project in current directory
+MAVEN_PROJECT_ARTIFACT=""
+MAVEN_PROJECT_VERSION=""
+
 
 #---------------------------------- Tab completion ----------------------------
 
@@ -147,8 +153,14 @@ prompt_vcs() {
   local ref
   ref="$vcs_info_msg_0_"
   if [[ -n "$ref" ]]; then
-    prompt_segment yellow $PRIMARY_FG
-    print -Pn " $ref"
+    prompt_segment yellow $PRIMARY_FG " $ref "
+  fi
+}
+
+# Dir: current working directory
+prompt_mvn() {
+  if [[ -n "$MAVEN_PROJECT_ARTIFACT" ]]; then
+    prompt_segment magenta $PRIMARY_FG " $MAVEN_PROJECT_ARTIFACT@$MAVEN_PROJECT_VERSION "
   fi
 }
 
@@ -193,6 +205,7 @@ prompt_main() {
   prompt_user
   prompt_host
   prompt_dir
+  prompt_mvn
   prompt_vcs
   prompt_end
 }
@@ -384,6 +397,23 @@ mvn-color()
   echo -ne "%{$reset_color%}"
 }
 alias mvn='mvn-color'
+
+MAVEN_PROJECT_ARTIFACT=""
+MAVEN_PROJECT_VERSION=""
+
+maven_read_project() {
+	local pom_contents
+	if [[ ! -r "pom.xml" ]]; then
+		MAVEN_PROJECT_ARTIFACT=""
+		MAVEN_PROJECT_VERSION=""
+		return 1;
+	fi
+	pom_contents=$(cat pom.xml)
+	MAVEN_PROJECT_ARTIFACT=$(xmllint --xpath "/*[local-name()='project']/*[local-name()='artifactId']/text()" - <<< "$pom_contents")
+	MAVEN_PROJECT_VERSION=$(xmllint --xpath "/*[local-name()='project']/*[local-name()='version']/text()" - <<< "$pom_contents")
+}
+
+add-zsh-hook chpwd maven_read_project
 
 #---------------------------------- Miscellaneous ---------------------------- 
 
