@@ -22,8 +22,9 @@ GEAR="\u2699"
 BULLET="\u2022"
 CROSSING="\u292c"
 
-#--- Helpers
+#---------------------------------- Helpers -----------------------------------
 
+# Search file up in directory tree
 find_up () {
   path=$(pwd)
   while [[ "$path" != "" ]]; do
@@ -36,6 +37,9 @@ find_up () {
 }
 
 #---------------------------------- Tab completion ----------------------------
+
+autoload -Uz compinit
+compinit
 
 # Force a reload of completion system if nothing matched; this fixes installing
 # a program and then trying to tab-complete its name
@@ -73,9 +77,6 @@ zstyle :compinstall filename "$HOME/.zshrc"
 
 # Always do mid-word tab completion
 setopt complete_in_word
-
-autoload -Uz compinit
-compinit
 
 #---------------------------------- History -----------------------------------
 
@@ -381,9 +382,11 @@ bindkey "\e[B" down-line-or-local-history
 
 #---------------------------------- Aliases ----------------------------------
 
+# Use interactive sudo instead of su
 alias su="sudo -u root -i"
 
 #---------------------------------- Maven ------------------------------------
+# Coloring maven output
 # based on https://gist.github.com/katta/1027800
 
 mvn-color()
@@ -406,7 +409,7 @@ mvn-color()
 }
 alias mvn='mvn-color'
 
-# Read project into current directory
+# Read project information from current directory - needed for prompt
 
 maven_read_project() {
 	local location parts
@@ -453,6 +456,8 @@ store_last_return_value() {
 	LAST_RETURN_VALUE="$?"
 }
 
+# Store last return value into separate variable
+# This must be exactly first precmd function, because other precmd might modify $?
 precmd_functions=(store_last_return_value $precmd_functions)
 
 #---------------------------------- Machine specific --------------------------
