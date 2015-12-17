@@ -362,6 +362,29 @@ bindkey "\e[B" down-line-or-local-history
 
 alias su="sudo -u root -i"
 
+#---------------------------------- Maven ------------------------------------
+# based on https://gist.github.com/katta/1027800
+
+mvn-color()
+{
+  # Filter mvn output using sed. Before filtering set the locale to C, so invalid characters won't break some sed implementations
+  unset LANG
+  LC_CTYPE=C mvn $@ | sed \
+    -e "s/\(-\{20,\}\)/$fg_bold[black]\1$reset_color/g" \
+    -e "s/Building \(.*\)/$fg_bold[magenta]\1$reset_color/g" \
+    -e "s/--- \([^@]\+\)@\(.*\) ---/-- $fg_bold[magenta]\2$reset_color - $fg_bold[cyan]\1$reset_color ---/g" \
+    -e "s/\(\(BUILD \)\?SUCCESS\)/$fg_bold[green]\1$reset_color/g" \
+    -e "s/\(\(BUILD \)\?FAILURE\)/$fg_bold[red]\1$reset_color/g" \
+    -e "s/\(SKIPPED\)/$fg_bold[yellow]\1$reset_color/g" \
+  	-e "s/\(\[INFO\]\)\(.*\)/$fg_bold[blue]\1$reset_color\2/g" \
+    -e "s/\(\[WARNING\]\)\(.*\)/$fg_bold[yellow]\1$reset_color\2/g" \
+    -e "s/\(\[ERROR\]\)\(.*\)/$fg_bold[red]\1$reset_color\2/g" \
+    -e "s/Tests run: \([^,]*\), Failures: \([^,]*\), Errors: \([^,]*\), Skipped: \([^,]*\)/$fg_bold[green]Tests run: \1$reset_color, Failures: $fg_bold[red]\2$reset_color, Errors: $fg_bold[red]\3$reset_color, Skipped: $fg_bold[yellow]\4$reset_color/g"
+  # Make sure formatting is reset
+  echo -ne "%{$reset_color%}"
+}
+alias mvn='mvn-color'
+
 #---------------------------------- Miscellaneous ---------------------------- 
 
 setopt autocd 
