@@ -10,6 +10,8 @@ EDITOR="vim"
 
 autoload colors; colors
 
+autoload -Uz add-zsh-hook
+
 LAST_RETURN_VALUE=0
 
 # Characters
@@ -229,14 +231,14 @@ prompt_precmd() {
   PROMPT="%{%f%b%k%}$(prompt_main) "
 }
 
-autoload -Uz add-zsh-hook
-autoload -Uz vcs_info
 
 prompt_opts=(cr subst percent)
 
 add-zsh-hook precmd prompt_precmd
 
 #---------------------------------- VCS ---------------------------------------
+
+autoload -Uz vcs_info
 
 zstyle ':vcs_info:*' enable git hg svn
 zstyle ':vcs_info:*' check-for-changes true
