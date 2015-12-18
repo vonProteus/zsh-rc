@@ -24,7 +24,7 @@ CROSSING="\u292c"
 
 #---------------------------------- Helpers -----------------------------------
 
-# Search file up in directory tree
+# Search file up in directory tree. Either print path to found file or nothing
 find_up () {
   path=$(pwd)
   while [[ "$path" != "" ]]; do
@@ -57,8 +57,7 @@ zstyle ':completion:*:default' list-colors ''
 zstyle ':completion:*' completer _force_rehash _complete _ignored _match _correct _approximate _prefix
 zstyle ':completion:*' max-errors 2
 
-# When looking for matches, first try exact matches, then case-insensiive, then
-# partial word completion
+# When looking for matches, first try exact matches, then case-insensiive, then partial word completion
 zstyle ':completion:*' matcher-list '' 'm:{a-z}={A-Z}' 'r:|[._-]=** r:|=**'
 
 # Turn on caching, which helps with e.g. apt
@@ -84,15 +83,17 @@ setopt complete_in_word
 
 #---------------------------------- History -----------------------------------
 
-setopt extended_history
-setopt hist_no_store
-setopt hist_ignore_dups
-setopt hist_expire_dups_first
-setopt hist_find_no_dups
-setopt inc_append_history
-setopt share_history
-setopt hist_reduce_blanks
-setopt hist_ignore_space
+setopt append_history # Allow multiple terminal sessions to all append to one zsh command history
+setopt extended_history # save timestamp of command and duration
+setopt inc_append_history # Add comamnds as they are typed, don't wait until shell exit
+setopt hist_expire_dups_first # when trimming history, lose oldest duplicates first
+setopt hist_ignore_dups # Do not write events to history that are duplicates of previous events
+setopt hist_ignore_space # remove command line from history list when first character on the line is a space
+setopt hist_find_no_dups # When searching history don't display results already cycled through twice
+setopt hist_reduce_blanks # Remove extra blanks from each command line being added to history
+setopt hist_verify # don't execute, just expand history
+setopt share_history # imports new commands and appends typed commands to history
+setopt hist_no_store # remove the history (fc -l) command from the history when invoked. 
 
 export HISTFILE=~/.zsh_history
 export HISTSIZE=1000000
@@ -241,6 +242,7 @@ zstyle ':vcs_info:*' enable git hg svn
 zstyle ':vcs_info:*' check-for-changes true
 zstyle ':vcs_info:*' get-revision true
 
+# these formats are set for PROMPT
 zstyle ':vcs_info:*' formats "%s $BRANCH%b $BULLET%i%u"
 zstyle ':vcs_info:*' actionformats "%s $BRANCH%b $BULLET%i%u [%a]"
 zstyle ':vcs_info:*' branchformat '%b'
@@ -421,6 +423,7 @@ maven_read_project() {
 		MAVEN_PROJECT_VERSION=""
 		return 1;
 	fi
+	# executing xmllint takes some time, so this does it in single execution
 	parts=($(echo "cat /*[local-name()='project']/*[local-name()='artifactId']/text()\n" \
 				"cat /*[local-name()='project']/*[local-name()='version']/text()\n" \
 				"cat /*[local-name()='project']/*[local-name()='parent']/*[local-name()='version']/text()\n" | \
@@ -435,12 +438,15 @@ add-zsh-hook chpwd maven_read_project
 
 #---------------------------------- Miscellaneous ---------------------------- 
 
-setopt autocd 
-setopt beep
-setopt extendedglob 
-setopt nomatch
+setopt extended_glob 
+setopt nomatch # if there is match on file pattern, dont run command (instead of running command with unchanged parameters)
+setopt interactive_comments # allow comments in command line
+setopt csh_junkie_quotes # complain if a quoted expression runs off the end of a line; prevent quoted expressions from containing un-escaped newlines. 
 
-unsetopt notify
+unsetopt beep # (dont) beep on errors
+unsetopt notify # (dont) report the status of background jobs immediately, rather than waiting until just before printing a prompt. 
+unsetopt auto_cd # (dont) enter the directory that was inputed as command
+unsetopt auto_remove_slash # (dont) remove last slash when next character is delimiter
 
 # Don't count common path separators as word characters
 WORDCHARS=${WORDCHARS//[&.;\/]}
