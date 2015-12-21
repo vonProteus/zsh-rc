@@ -438,6 +438,20 @@ maven_read_project() {
 
 add-zsh-hook chpwd maven_read_project
 
+#---------------------------------- Copy zshrc remote -------------------------
+
+sshc() {
+	local source target
+	source=${ZDOTDIR:-$HOME}
+	target="/tmp/.zdot-${RANDOM}"
+	ssh -q -o "ControlPath=/tmp/.cm-%r@%h:%p" -o "ControlMaster=yes" -o "ControlPersist=yes" $1 'false'
+	ssh -q -o "ControlPath=/tmp/.cm-%r@%h:%p" $1 "mkdir $target"
+	scp -q -o "ControlPath=/tmp/.cm-%r@%h:%p" $source/.zshrc $1:$target/.zshrc
+	ssh -q -o "ControlPath=/tmp/.cm-%r@%h:%p" $1 -t "ZDOTDIR=$target exec zsh -l"
+	ssh -q -o "ControlPath=/tmp/.cm-%r@%h:%p" $1 "rm -r $target"
+	ssh -q -o "ControlPath=/tmp/.cm-%r@%h:%p" -O stop $1 
+}
+
 #---------------------------------- Miscellaneous ---------------------------- 
 
 setopt extended_glob 
