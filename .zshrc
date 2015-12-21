@@ -67,7 +67,7 @@ zstyle ':completion:*' use-cache on
 zstyle ':completion:*' cache-path ~/.zsh/cache
 
 # Show titles for completion types and group by type
-zstyle ':completion:*:descriptions' format "$fg_bold[black]» %d$reset_color"
+zstyle ':completion:*:descriptions' format "$fg_bold[yellow]» %d$reset_color"
 zstyle ':completion:*' group-name ''
 
 # Ignore some common useless files
