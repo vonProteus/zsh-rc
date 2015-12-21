@@ -443,12 +443,12 @@ add-zsh-hook chpwd maven_read_project
 setopt extended_glob 
 setopt nomatch # if there is match on file pattern, dont run command (instead of running command with unchanged parameters)
 setopt interactive_comments # allow comments in command line
-setopt csh_junkie_quotes # complain if a quoted expression runs off the end of a line; prevent quoted expressions from containing un-escaped newlines. 
 
 unsetopt beep # (dont) beep on errors
 unsetopt notify # (dont) report the status of background jobs immediately, rather than waiting until just before printing a prompt. 
 unsetopt auto_cd # (dont) enter the directory that was inputed as command
 unsetopt auto_remove_slash # (dont) remove last slash when next character is delimiter
+unsetopt csh_junkie_quotes # (dont) complain if a quoted expression runs off the end of a line; prevent quoted expressions from containing un-escaped newlines. 
 
 # Don't count common path separators as word characters
 WORDCHARS=${WORDCHARS//[&.;\/]}
