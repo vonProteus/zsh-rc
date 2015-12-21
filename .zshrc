@@ -420,7 +420,7 @@ alias mvn='mvn-color'
 maven_read_project() {
 	local location parts
 	location=$(find_up pom.xml)
-	if [[ ! -r "$location" ]]; then
+	if [[ ! -r "$location" || -z $commands[xmllint] ]]; then
 		MAVEN_PROJECT_ARTIFACT=""
 		MAVEN_PROJECT_VERSION=""
 		return 1;
