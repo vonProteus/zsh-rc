@@ -175,8 +175,8 @@ prompt_vcs() {
 
 # Dir: current working directory
 prompt_mvn() {
-  if [[ -n "$MAVEN_PROJECT_ARTIFACT" ]]; then
-    prompt_segment magenta $PRIMARY_FG " $MAVEN_PROJECT_ARTIFACT@$MAVEN_PROJECT_VERSION "
+  if [[ -n "$MAVEN_PROJECT" ]]; then
+    prompt_segment magenta $PRIMARY_FG " $MAVEN_PROJECT "
   fi
 }
 
@@ -421,19 +421,21 @@ maven_read_project() {
 	local location parts
 	location=$(find_up pom.xml)
 	if [[ ! -r "$location" || -z $commands[xmllint] ]]; then
-		MAVEN_PROJECT_ARTIFACT=""
-		MAVEN_PROJECT_VERSION=""
+		MAVEN_PROJECT=""
 		return 1;
 	fi
 	# executing xmllint takes some time, so this does it in single execution
 	parts=($(echo "cat /*[local-name()='project']/*[local-name()='artifactId']/text()\n" \
 				"cat /*[local-name()='project']/*[local-name()='version']/text()\n" \
 				"cat /*[local-name()='project']/*[local-name()='parent']/*[local-name()='version']/text()\n" | \
-		xmllint --shell $location | \
+		xmllint --shell $location 2>/dev/null | \
 		sed '/^\/ >/d' | \
 		sed '/^ -------/d'))
-	MAVEN_PROJECT_ARTIFACT=${parts[1]}
-	MAVEN_PROJECT_VERSION=${parts[2]}
+	if [[ "${#parts}" > 1 ]]; then
+		MAVEN_PROJECT="${parts[1]}@${parts[2]}"
+	else 	
+		MAVEN_PROJECT="pom!"
+	fi;
 }
 
 add-zsh-hook chpwd maven_read_project
