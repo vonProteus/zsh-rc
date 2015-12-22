@@ -109,29 +109,40 @@ CURRENT_BG='NONE'
 
 # Characters
 SEGMENT_SEPARATOR_FORWARD="\ue0b0"
+SEGMENT_SEPARATOR_BACKWARD="\ue0b2"
 
 prompt_segment() {
-  if [[ -z $3 ]]; then return; fi
-  local newbg newfg
-  [[ -n $1 ]] && newbg="%K{$1}" || newbg="%k"
-  [[ -n $2 ]] && newfg="%F{$2}" || newfg="%f"
-  if [[ $CURRENT_BG != 'NONE' && $1 != $CURRENT_BG ]]; then
-    print -n "%{$newbg%F{$CURRENT_BG}%}$SEGMENT_SEPARATOR_FORWARD%{$newfg%}"
-  else
-    print -n "%{$newbg%}%{$newfg%}"
+  local direction newbg newfg text
+  direction="$1"
+  newbg="$2"
+  newfg="$3"
+  text="$4"
+  if [[ -z $text ]]; then return; fi
+  if [[ $newbg != $CURRENT_BG ]]; then
+	if [[ "$direction" == 'forward' ]]; then
+		if [[ $CURRENT_BG != 'NONE' ]]; then
+		    print -n "%{%K{$newbg}%F{$CURRENT_BG}%}$SEGMENT_SEPARATOR_FORWARD%{%F{$newfg}%}"
+		else 
+		    print -n "%{%K{$newbg}%F{$newfg}%}"
+		fi
+	else
+	    print -n "%{%F{$newbg}%}$SEGMENT_SEPARATOR_BACKWARD%{%F{$newfg}%K{$newbg}%}"
+	fi
   fi
-  print -n " $3 "
-  CURRENT_BG=$1
+  print -n " $text "
+  CURRENT_BG=$newbg
 }
 
 # End the prompt, closing any open segments
 prompt_end() {
   if [[ -n $CURRENT_BG ]]; then
     print -n "%{%k%F{$CURRENT_BG}%}$SEGMENT_SEPARATOR_FORWARD"
-  else
-    print -n "%{%k%}"
   fi
-  print -n "%{%f%}"
+  CURRENT_BG=''
+}
+
+prompt_clear() {
+  print -n "%{%k%f%}"
   CURRENT_BG=''
 }
 
@@ -181,24 +192,33 @@ prompt_status() {
 }
 
 ## Main prompt
-prompt_main() {
+prompt_forward() {
   CURRENT_BG='NONE'
-  prompt_segment green   black   "$(date +%R)"      # prompt time
-  prompt_segment black   default "$(prompt_status)"
-  prompt_segment red     yellow  "$(prompt_root)"
-  prompt_segment magenta black   "$(prompt_user)"
-  prompt_segment cyan    black   "$(prompt_host)"
-  prompt_segment blue    black   '%~'               # prompt directory
-  prompt_segment magenta black   "$MAVEN_PROJECT"   # prompt maven project
-  prompt_segment yellow  black   "$vcs_info_msg_0_" # prompt vcs
+  prompt_segment forward black   default "$(prompt_status)"
+  prompt_segment forward red     yellow  "$(prompt_root)"
+  prompt_segment forward magenta black   "$(prompt_user)"
+  prompt_segment forward cyan    black   "$(prompt_host)"
+  prompt_segment forward blue    black   '%~'               # prompt directory
   prompt_end
+  prompt_clear
+}
+
+## Reverse prompt
+prompt_backward() {
+  CURRENT_BG='NONE'
+  prompt_segment backward magenta black   "$MAVEN_PROJECT"   # prompt maven project
+  prompt_segment backward yellow  black   "$vcs_info_msg_0_" # prompt vcs
+  prompt_segment backward green   black   "%T"      # prompt time
+  prompt_clear
 }
 
 prompt_precmd() {
   vcs_info
-  PROMPT="%{%f%b%k%}$(prompt_main) "
+  PROMPT="%{%f%b%k%}$(prompt_forward) "
+  RPROMPT="%{%f%b%k%}$(prompt_backward)"
 }
 
+ZLE_RPROMPT_INDENT=0
 prompt_opts=(cr subst percent)
 
 add-zsh-hook precmd prompt_precmd
