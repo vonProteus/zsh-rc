@@ -66,8 +66,11 @@ zstyle ':completion:*' matcher-list '' 'm:{a-z}={A-Z}' 'r:|[._-]=** r:|=**'
 zstyle ':completion:*' use-cache on
 zstyle ':completion:*' cache-path ~/.zsh/cache
 
+# Show nice warning when nothing matched
+zstyle ':completion:*:warnings' format '%No matches: %d%b'
+
 # Show titles for completion types and group by type
-zstyle ':completion:*:descriptions' format "$fg_bold[yellow]» %d$reset_color"
+zstyle ':completion:*:descriptions' format "%U%B%F{yellow}» %d%u%b%f"
 zstyle ':completion:*' group-name ''
 
 # Ignore some common useless files
@@ -444,6 +447,9 @@ sshc() {
 #---------------------------------- Miscellaneous ---------------------------- 
 
 setopt extended_glob 
+setopt correct # try to correct the spelling of commands. 
+setopt correct_all # try to correct the spelling of all arguments in a line. 
+setopt numeric_glob_sort # if numeric filenames are matched by a filename generation pattern, sort the filenames numerically rather than lexicographically. 
 setopt nomatch # if there is match on file pattern, dont run command (instead of running command with unchanged parameters)
 setopt interactive_comments # allow comments in command line
 
