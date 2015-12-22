@@ -337,7 +337,7 @@ add-zsh-hook precmd title_precmd
 
 #---------------------------------- Bindings ----------------------------------
 
-bindkey -e
+bindkey -v
 
 # General movement
 # Taken from http://wiki.archlinux.org/index.php/Zsh and Ubuntu's inputrc
@@ -356,6 +356,8 @@ bindkey "\eOd" emacs-backward-word
 bindkey "\e\e[C" forward-word
 bindkey "\e\e[D" backward-word
 
+bindkey ' ' magic-space # do history expansion on space
+
 # for non RH/Debian xterm, can't hurt for RH/Debian xterm
 bindkey "\eOH" beginning-of-line
 bindkey "\eOF" end-of-line
@@ -364,6 +366,7 @@ bindkey "\e[H" beginning-of-line
 bindkey "\e[F" end-of-line
 
 # Tab completion
+bindkey "^r" history-incremental-search-backward
 bindkey '^i' complete-word              # tab to do menu
 bindkey "\e[Z" reverse-menu-complete    # shift-tab to reverse menu
 
