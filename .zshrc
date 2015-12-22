@@ -86,6 +86,16 @@ zstyle :compinstall filename "$HOME/.zshrc"
 # Always do mid-word tab completion
 setopt complete_in_word
 
+#---------------------------------- Prediction --------------------------------
+
+autoload predict-on
+autoload predict-off
+
+zle -N predict-on
+zle -N predict-off
+bindkey "^Z" predict-on    # C-z
+bindkey "^X^Z" predict-off # C-x C-z 
+
 #---------------------------------- History -----------------------------------
 
 setopt append_history # Allow multiple terminal sessions to all append to one zsh command history
