@@ -106,31 +106,28 @@ export SAVEHIST=1000000
 # Based on agnoster's Theme - https://gist.github.com/3712874
 
 CURRENT_BG='NONE'
-PRIMARY_FG=black
 
 # Characters
-SEGMENT_SEPARATOR="\ue0b0"
+SEGMENT_SEPARATOR_FORWARD="\ue0b0"
 
-# Begin a segment
-# Takes two arguments, background and foreground. Both can be omitted,
-# rendering default background/foreground.
 prompt_segment() {
-  local bg fg
-  [[ -n $1 ]] && bg="%K{$1}" || bg="%k"
-  [[ -n $2 ]] && fg="%F{$2}" || fg="%f"
+  if [[ -z $3 ]]; then return; fi
+  local newbg newfg
+  [[ -n $1 ]] && newbg="%K{$1}" || newbg="%k"
+  [[ -n $2 ]] && newfg="%F{$2}" || newfg="%f"
   if [[ $CURRENT_BG != 'NONE' && $1 != $CURRENT_BG ]]; then
-    print -n "%{$bg%F{$CURRENT_BG}%}$SEGMENT_SEPARATOR%{$fg%}"
+    print -n "%{$newbg%F{$CURRENT_BG}%}$SEGMENT_SEPARATOR_FORWARD%{$newfg%}"
   else
-    print -n "%{$bg%}%{$fg%}"
+    print -n "%{$newbg%}%{$newfg%}"
   fi
+  print -n " $3 "
   CURRENT_BG=$1
-  [[ -n $3 ]] && print -n $3
 }
 
 # End the prompt, closing any open segments
 prompt_end() {
   if [[ -n $CURRENT_BG ]]; then
-    print -n "%{%k%F{$CURRENT_BG}%}$SEGMENT_SEPARATOR"
+    print -n "%{%k%F{$CURRENT_BG}%}$SEGMENT_SEPARATOR_FORWARD"
   else
     print -n "%{%k%}"
   fi
@@ -144,52 +141,23 @@ prompt_end() {
 # Root privileges
 prompt_root() {
   if [[ $UID -eq 0 ]]; then
-    prompt_segment red yellow " %(!.%{%F{yellow}%}.)$LIGHTNING "
+    print -n $LIGHTNING
   fi
 }
 
 # Different username
 prompt_user() {
-  local user=`whoami`
-
+  local user=$(whoami)
   if [[ "$user" != "$DEFAULT_USER" && $UID -ne 0 ]]; then
-    prompt_segment magenta $PRIMARY_FG " %(!.%{%F{yellow}%}.)$user "
+    print -n $user
   fi
 }
 
 # Different host
 prompt_host() {
   if [[ -n "$SSH_CONNECTION" ]]; then
-    prompt_segment cyan $PRIMARY_FG " %m "
+    print -n "%m"
   fi
-}
-
-# VCS status
-prompt_vcs() {
-  local ref
-  ref="$vcs_info_msg_0_"
-  if [[ -n "$ref" ]]; then
-    prompt_segment yellow $PRIMARY_FG " $ref "
-  fi
-}
-
-# Dir: current working directory
-prompt_mvn() {
-  if [[ -n "$MAVEN_PROJECT" ]]; then
-    prompt_segment magenta $PRIMARY_FG " $MAVEN_PROJECT "
-  fi
-}
-
-# show current time
-prompt_time() {
-  local current_date
-  current_date=`date +%R`
-  prompt_segment green $PRIMARY_FG " ${current_date} "
-}
-
-# Dir: current working directory
-prompt_dir() {
-  prompt_segment blue $PRIMARY_FG ' %~ '
 }
 
 # Status:
@@ -208,21 +176,21 @@ prompt_status() {
   	symbols+="%{%F{cyan}%}$GEAR"
   fi
   if [[ -n "$symbols" ]]; then
-  	prompt_segment $PRIMARY_FG default " $symbols "
+  	echo "$symbols"
   fi
 }
 
 ## Main prompt
 prompt_main() {
   CURRENT_BG='NONE'
-  prompt_time
-  prompt_status
-  prompt_root
-  prompt_user
-  prompt_host
-  prompt_dir
-  prompt_mvn
-  prompt_vcs
+  prompt_segment green   black   "$(date +%R)"      # prompt time
+  prompt_segment black   default "$(prompt_status)"
+  prompt_segment red     yellow  "$(prompt_root)"
+  prompt_segment magenta black   "$(prompt_user)"
+  prompt_segment cyan    black   "$(prompt_host)"
+  prompt_segment blue    black   '%~'               # prompt directory
+  prompt_segment magenta black   "$MAVEN_PROJECT"   # prompt maven project
+  prompt_segment yellow  black   "$vcs_info_msg_0_" # prompt vcs
   prompt_end
 }
 
@@ -230,7 +198,6 @@ prompt_precmd() {
   vcs_info
   PROMPT="%{%f%b%k%}$(prompt_main) "
 }
-
 
 prompt_opts=(cr subst percent)
 
