@@ -15,14 +15,15 @@ autoload -Uz add-zsh-hook
 LAST_RETURN_VALUE=0
 
 # Characters
-PLUSMINUS="\u00b1"
-BRANCH="\ue0a0"
-DETACHED="\u27a6"
-CROSS="\u2718"
-LIGHTNING="\u26a1"
-GEAR="\u2699"
-BULLET="\u2022"
-CROSSING="\u292c"
+UNSTAGED_CHARACTER="\u26a1"
+CHANGES_CHARACTER="\u00b1"
+BRANCH_CHARACTER="\ue0a0"
+DETACHED_CHARACTER="\u27a6"
+REVISION_CHARACTER="\u2022"
+
+FAILED_CHARACTER="\u2718"
+SUPERUSER_CHARACTER="\u26a1"
+JOBS_CHARACTER="\u2699"
 
 #---------------------------------- Helpers -----------------------------------
 
@@ -165,7 +166,7 @@ prompt_clear() {
 # Root privileges
 prompt_root() {
   if [[ $UID -eq 0 ]]; then
-    print -n $LIGHTNING
+    print -n $SUPERUSER_CHARACTER
   fi
 }
 
@@ -191,13 +192,13 @@ prompt_status() {
   local symbols
   symbols=()
   if [[ $LAST_RETURN_VALUE -ne 0 ]]; then
-  	symbols+="%{%F{red}%}$CROSS"
+  	symbols+="%{%F{red}%}$FAILED_CHARACTER"
 	if [[ $LAST_RETURN_VALUE -ne 1 ]]; then
-		symbols+="$CROSS $CROSS"
+		symbols+="$FAILED_CHARACTER $FAILED_CHARACTER"
 	fi
   fi
   if [[ $(jobs -l | wc -l) -gt 0 ]]; then
-  	symbols+="%{%F{cyan}%}$GEAR"
+  	symbols+="%{%F{cyan}%}$JOBS_CHARACTER"
   fi
   if [[ -n "$symbols" ]]; then
   	echo "$symbols"
@@ -245,17 +246,17 @@ zstyle ':vcs_info:*' check-for-changes true
 zstyle ':vcs_info:*' get-revision true
 
 # these formats are set for PROMPT
-zstyle ':vcs_info:*' formats "%s $BRANCH%b $BULLET%i%u"
-zstyle ':vcs_info:*' actionformats "%s $BRANCH%b $BULLET%i%u [%a]"
-zstyle ':vcs_info:*' branchformat '%b'
+zstyle ':vcs_info:*' formats "%s $BRANCH_CHARACTER%b $REVISION_CHARACTER%i%u"
+zstyle ':vcs_info:*' actionformats "%s $BRANCH_CHARACTER%b $REVISION_CHARACTER%i%u [%a]"
+zstyle ':vcs_info:*' BRANCH_CHARACTERformat '%b'
 
-zstyle ':vcs_info:hg*' unstagedstr "$PLUSMINUS"
+zstyle ':vcs_info:hg*' unstagedstr "$CHANGES_CHARACTER"
 zstyle ':vcs_info:hg*' hgrevformat "%r" # default "%r:%h"
 
-zstyle ':vcs_info:git*' formats "%s $BRANCH%b%u"
-zstyle ':vcs_info:git*' actionformats "%s $BRANCH%b%u [%a]"
-zstyle ':vcs_info:git*' unstagedstr "$LIGHTNING"
-zstyle ':vcs_info:git*' stagedstr "$PLUSMINUS"
+zstyle ':vcs_info:git*' formats "%s $BRANCH_CHARACTER%b%u"
+zstyle ':vcs_info:git*' actionformats "%s $BRANCH_CHARACTER%b%u [%a]"
+zstyle ':vcs_info:git*' unstagedstr "$UNSTAGED_CHARACTER"
+zstyle ':vcs_info:git*' stagedstr "$CHANGES_CHARACTER"
 
 #---------------------------------- Listings ----------------------------------
 
