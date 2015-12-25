@@ -401,21 +401,22 @@ alias su="sudo -u root -i"
 
 mvn-color()
 {
-	mvn $@ 2>/dev/null | sed \
-	    -e "/^\W*$/d" \
-		-e "s/\(-\{20,\}\)/$fg[black]\1$reset_color/g" \
-	    -e "s/Building \(.*\)/Building $fg_bold[magenta]\1$reset_color/g" \
-	    -e "s/--- \([^@]\+\) @ \(.*\) ---/$fg_bold[magenta]\2$reset_color - $fg_bold[cyan]\1$reset_color ---/g" \
-	    -e "s/\(\(BUILD \)\?SUCCESS\)/$fg_bold[green]\1$reset_color/g" \
-	    -e "s/\(\(BUILD \)\?FAILURE\)/$fg_bold[red]\1$reset_color/g" \
-	    -e "s/\(SKIPPED\)/$fg_bold[yellow]\1$reset_color/g" \
-	  	-e "s/\(\[INFO\]\)\(.*\)/$fg_bold[blue]---$reset_color\2/g" \
-	    -e "s/\(\[WARNING\]\)\(.*\)/$fg_bold[yellow]>>>$reset_color\2/g" \
-	    -e "s/\(\[ERROR\]\)\(.*\)/$fg_bold[red]!!!$reset_color\2/g" \
-	    -e "s/^ T E S T S/$fg_bold[blue]~~~$reset_color /" \
-	    -e "s/Results :/$fg_bold[blue]~~~$reset_color Total: /" \
-	    -e "s/Running \([a-zA-Z0-9.]\+\)/$fg_bold[blue]~~~$reset_color Test: $fg_bold[cyan]\1$reset_color/" \
-	    -e "s/Tests run: \([^,]*\), Failures: \([^,]*\), Errors: \([^,]*\), Skipped: \([^,]*\)/$fg_bold[blue]~~~$reset_color Run: $fg_bold[green]\1$reset_color, Failed: $fg_bold[red]\2$reset_color, Error: $fg_bold[red]\3$reset_color, Skipped: $fg_bold[yellow]\4$reset_color/"
+	mvn $@ 2>/dev/null | sed -e "
+	    /^\W*$/d
+		s/\(-\{20,\}\)/$fg[black]\1$reset_color/g
+	    s/Building \(.*\)/Building $fg_bold[magenta]\1$reset_color/g
+	    s/--- \([^@]\+\) @ \(.*\) ---/$fg_bold[magenta]\2$reset_color - $fg_bold[cyan]\1$reset_color ---/g
+	    s/\(\(BUILD \)\?SUCCESS\)/$fg_bold[green]\1$reset_color/g
+	    s/\(\(BUILD \)\?FAILURE\)/$fg_bold[red]\1$reset_color/g
+	    s/\(SKIPPED\)/$fg_bold[yellow]\1$reset_color/g
+	  	s/\(\[INFO\]\)\(.*\)/$fg_bold[blue]---$reset_color\2/g
+	    s/\(\[WARNING\]\)\(.*\)/$fg_bold[yellow]>>>$reset_color\2/g
+	    s/\(\[ERROR\]\)\(.*\)/$fg_bold[red]!!!$reset_color\2/g
+	    s/^ T E S T S/$fg_bold[blue]~~~$reset_color /
+	    s/Results :/$fg_bold[blue]~~~$reset_color Total: /
+	    s/Running \([a-zA-Z0-9.]\+\)/$fg_bold[blue]~~~$reset_color Test: $fg_bold[cyan]\1$reset_color/
+	    s/Tests run: \([^,]*\), Failures: \([^,]*\), Errors: \([^,]*\), Skipped: \([^,]*\)/$fg_bold[blue]~~~$reset_color Run: $fg_bold[green]\1$reset_color, Failed: $fg_bold[red]\2$reset_color, Error: $fg_bold[red]\3$reset_color, Skipped: $fg_bold[yellow]\4$reset_color/
+	"
  	echo -ne "$reset_color"
 }
 alias mvn='mvn-color'
