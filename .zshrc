@@ -479,6 +479,8 @@ WORDCHARS=${WORDCHARS//[&.;\/]}
 # Report time if command takes too long
 REPORTTIME=5
 
+TIMEFMT=$(echo "$fg[green]${SEGMENT_SEPARATOR_BACKWARD}$bg[green]$fg[black] %*Es $fg[yellow]$SEGMENT_SEPARATOR_BACKWARD$bg[yellow]$fg[black] %P $reset_color")
+
 # Don't glob with find or wget
 for command in find wget; \
     alias $command="noglob $command"
