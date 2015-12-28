@@ -487,6 +487,9 @@ TIMEFMT=$(echo "$fg[green]${SEGMENT_SEPARATOR_BACKWARD}$bg[green]$fg[black] %*Es
 for command in find wget; \
     alias $command="noglob $command"
 
+# load zsh extended move
+autoload -Uz zmv
+
 #---------------------------------- Post Setup --------------------------------
 
 store_last_return_value() {
