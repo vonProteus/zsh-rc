@@ -92,6 +92,10 @@ zstyle ':completion:*' squeeze-slashes true
 zstyle ':completion::*:kill:*:*' command 'ps xf -U $USER -o pid,%cpu,cmd'
 zstyle ':completion::*:kill:*:processes' list-colors '=(#b) #([0-9]#)*=0=01;32'
 
+zstyle ':completion:*:ssh:*' hosts ${${${(@M)${(f)"$(cat ~/.ssh/config)"}:#Host *}#Host }:#*[*?]*}
+zstyle ':completion:*:slogin:*' hosts ${${${(@M)${(f)"$(cat ~/.ssh/config)"}:#Host *}#Host }:#*[*?]*}
+zstyle ':completion:*:ssh:*' users # disables users completion
+
 zstyle :compinstall filename "$HOME/.zshrc"
 
 # Always do mid-word tab completion
@@ -469,6 +473,8 @@ sshc() {
 	ssh -q -o "ControlPath=/tmp/.cm-%r@%h:%p" $1 "rm -r $target"
 	ssh -q -o "ControlPath=/tmp/.cm-%r@%h:%p" -O stop $1 
 }
+
+compdef '_dispatch ssh ssh' sshc
 
 #---------------------------------- Miscellaneous ---------------------------- 
 
