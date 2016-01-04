@@ -250,7 +250,7 @@ zstyle ':vcs_info:*' get-revision true
 # these formats are set for PROMPT
 zstyle ':vcs_info:*' formats "%s $BRANCH_CHARACTER%b $REVISION_CHARACTER%i%u"
 zstyle ':vcs_info:*' actionformats "%s $BRANCH_CHARACTER%b $REVISION_CHARACTER%i%u [%a]"
-zstyle ':vcs_info:*' BRANCH_CHARACTERformat '%b'
+zstyle ':vcs_info:*' branchformat '%b'
 
 zstyle ':vcs_info:hg*' unstagedstr "$CHANGES_CHARACTER"
 zstyle ':vcs_info:hg*' hgrevformat "%r" # default "%r:%h"
