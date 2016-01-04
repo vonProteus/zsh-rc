@@ -1,5 +1,7 @@
 #
 # Source at https://gist.github.com/nivertius/7fea1d83d56debc816ca
+# Download Powerline-patched fonts from
+#    https://github.com/powerline/fonts
 #
 #---------------------------------- Configuration -----------------------------
 
