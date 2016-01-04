@@ -67,7 +67,8 @@ zstyle ':completion:*' matcher-list '' 'm:{a-z}={A-Z}' 'r:|[._-]=** r:|=**'
 
 # Turn on caching, which helps with e.g. apt
 zstyle ':completion:*' use-cache on
-zstyle ':completion:*' cache-path ~/.zsh/cache
+zstyle ':completion:*' cache-path "$HOME/.zsh/cache"
+mkdir -p $HOME/.zsh/cache
 
 # Show nice warning when nothing matched
 zstyle ':completion:*:warnings' format '%No matches: %d%b'
