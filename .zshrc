@@ -93,8 +93,9 @@ zstyle ':completion::*:kill:*:*' command 'ps xf -U $USER -o pid,%cpu,cmd'
 zstyle ':completion::*:kill:*:processes' list-colors '=(#b) #([0-9]#)*=0=01;32'
 
 zstyle ':completion:*:ssh:*' hosts ${${${(@M)${(f)"$(cat ~/.ssh/config)"}:#Host *}#Host }:#*[*?]*}
-zstyle ':completion:*:slogin:*' hosts ${${${(@M)${(f)"$(cat ~/.ssh/config)"}:#Host *}#Host }:#*[*?]*}
+zstyle ':completion:*:scp:*' hosts ${${${(@M)${(f)"$(cat ~/.ssh/config)"}:#Host *}#Host }:#*[*?]*}
 zstyle ':completion:*:ssh:*' users # disables users completion
+zstyle ':completion:*:scp:*' users # disables users completion
 
 zstyle :compinstall filename "$HOME/.zshrc"
 
