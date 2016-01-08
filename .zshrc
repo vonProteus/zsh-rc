@@ -488,6 +488,7 @@ setopt correct_all # try to correct the spelling of all arguments in a line.
 setopt numeric_glob_sort # if numeric filenames are matched by a filename generation pattern, sort the filenames numerically rather than lexicographically. 
 setopt nomatch # if there is match on file pattern, dont run command (instead of running command with unchanged parameters)
 setopt interactive_comments # allow comments in command line
+setopt multios # enable multiple input/output redirections that work as expected
 
 unsetopt beep # (dont) beep on errors
 unsetopt notify # (dont) report the status of background jobs immediately, rather than waiting until just before printing a prompt. 
