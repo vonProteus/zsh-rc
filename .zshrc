@@ -24,8 +24,11 @@ DETACHED_CHARACTER="\u27a6"
 REVISION_CHARACTER="\u2022"
 
 FAILED_CHARACTER="\u2718"
+SUCCESS_CHARACTER="\u2714"
 SUPERUSER_CHARACTER="\u26a1"
 JOBS_CHARACTER="\u2699"
+NO_JOBS_CHARACTER="\u2022"
+
 
 #---------------------------------- Helpers -----------------------------------
 
@@ -210,17 +213,16 @@ prompt_status() {
   local symbols
   symbols=()
   if [[ $LAST_RETURN_VALUE -ne 0 ]]; then
-  	symbols+="%{%F{red}%}$FAILED_CHARACTER"
-	if [[ $LAST_RETURN_VALUE -ne 1 ]]; then
-		symbols+="$FAILED_CHARACTER $FAILED_CHARACTER"
-	fi
+    symbols+="%{%F{red}%}$FAILED_CHARACTER%{%f%}"
+  else
+    symbols+="%{%F{green}%}$SUCCESS_CHARACTER%{%f%}"
   fi
   if [[ $(jobs -l | wc -l) -gt 0 ]]; then
-  	symbols+="%{%F{cyan}%}$JOBS_CHARACTER"
+    symbols+="%{%F{cyan}%}$JOBS_CHARACTER%{%f%}"
+  else
+    symbols+="%{%F{white}%}$NO_JOBS_CHARACTER%{%f%}"
   fi
-  if [[ -n "$symbols" ]]; then
-  	echo "$symbols"
-  fi
+  echo "$symbols"
 }
 
 ## Main prompt
