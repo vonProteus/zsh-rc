@@ -3,11 +3,6 @@
 # Download Powerline-patched fonts from
 #    https://github.com/powerline/fonts
 #
-#---------------------------------- Configuration -----------------------------
-
-DEFAULT_USER="nivertius"
-EDITOR="vim"
-
 #---------------------------------- Pre Setup ---------------------------------
 
 autoload colors; colors
