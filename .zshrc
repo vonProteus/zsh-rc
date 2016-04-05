@@ -274,6 +274,7 @@ prompt_precmd() {
   PS2="%{%f%b%k%}$(prompt2_forward) "
   RPROMPT="%{%f%b%k%}$(prompt_backward)"
   PRS="$RPROMPT"
+  SPROMPT="Correct %{%F{red}%}%R%{%f%} to %{%F{green}%}%r%f? [%Uy%ues|%Un%uo|%Ua%ubort|%Ue%udit] "
 }
 
 ZLE_RPROMPT_INDENT=0
