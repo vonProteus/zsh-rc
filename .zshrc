@@ -95,6 +95,8 @@ zstyle ':completion:*' squeeze-slashes true
 zstyle ':completion::*:kill:*:*' command 'ps xf -U $USER -o pid,%cpu,cmd'
 zstyle ':completion::*:kill:*:processes' list-colors '=(#b) #([0-9]#)*=0=01;32'
 
+# sudo completion
+zstyle ':completion:*:sudo:*' command-path append /sbin /usr/sbin
 
 list-ssh-hosts() { [[ -f $HOME/.ssh/config ]] && print -n $(cat $HOME/.ssh/config | sed '/^Host /!d;s/Host *\([^ \#]\+\)/\1/') }
 
