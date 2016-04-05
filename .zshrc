@@ -46,9 +46,6 @@ find_up () {
 
 #---------------------------------- Tab completion ----------------------------
 
-autoload -Uz compinit
-compinit
-
 # Force a reload of completion system if nothing matched; this fixes installing
 # a program and then trying to tab-complete its name
 _force_rehash() {
@@ -541,6 +538,10 @@ for command in find wget; \
 autoload -Uz zmv
 
 #---------------------------------- Post Setup --------------------------------
+
+# at last initialize completion
+autoload -Uz compinit
+compinit
 
 store_last_return_value() {
 	LAST_RETURN_VALUE="$?"
