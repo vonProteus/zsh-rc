@@ -97,6 +97,11 @@ zstyle ':completion:*:scp:*' hosts $(list-ssh-hosts)
 zstyle ':completion:*:ssh:*' users # disables users completion
 zstyle ':completion:*:scp:*' users # disables users completion
 
+# maven completions (from zsh-users/zsh-completions)
+zstyle ':completion:*:*:mvn:*:matches' group 'yes'
+zstyle ':completion:*:*:mvn:*:options' description 'yes'
+zstyle ':completion:*:*:mvn:*:options' auto-description '%d'
+
 # Always do mid-word tab completion
 setopt complete_in_word
 
