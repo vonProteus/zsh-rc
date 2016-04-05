@@ -102,11 +102,11 @@ zstyle ':completion:*:scp:*' hosts $(list-ssh-hosts)
 zstyle ':completion:*:ssh:*' users # disables users completion
 zstyle ':completion:*:scp:*' users # disables users completion
 
-zstyle :compinstall filename "$HOME/.zshrc"
-
 # Always do mid-word tab completion
 setopt complete_in_word
 
+# don't expand aliases _before_ completion has finished
+setopt complete_aliases
 
 #---------------------------------- Corrections -------------------------------
 
@@ -503,8 +503,6 @@ sshc() {
 	ssh -q -o "ControlPath=/tmp/.cm-%r@%h:%p" $1 "rm -r $target"
 	ssh -q -o "ControlPath=/tmp/.cm-%r@%h:%p" -O stop $1 
 }
-
-compdef '_dispatch ssh ssh' sshc
 
 #---------------------------------- Miscellaneous ---------------------------- 
 
