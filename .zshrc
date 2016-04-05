@@ -255,10 +255,25 @@ prompt_backward() {
   prompt_clear
 }
 
+prompt2_forward() {
+  CURRENT_BG='NONE'
+  prompt_segment forward black   default "$(prompt_status)"
+  prompt_segment forward red     yellow  "$(prompt_root)"
+  prompt_segment forward magenta black   "$(prompt_user)"
+  prompt_segment forward cyan    black   "$(prompt_host)"
+  prompt_segment forward blue    black   '%~'               # prompt directory
+  prompt_segment forward red     black   '%_'               # unmatched quote
+  prompt_end
+  prompt_clear
+}
+
 prompt_precmd() {
   vcs_info
   PROMPT="%{%f%b%k%}$(prompt_forward) "
+  PS="$PROMPT"
+  PS2="%{%f%b%k%}$(prompt2_forward) "
   RPROMPT="%{%f%b%k%}$(prompt_backward)"
+  PRS="$RPROMPT"
 }
 
 ZLE_RPROMPT_INDENT=0
