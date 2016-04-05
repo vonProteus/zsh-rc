@@ -110,6 +110,13 @@ zstyle :compinstall filename "$HOME/.zshrc"
 # Always do mid-word tab completion
 setopt complete_in_word
 
+
+#---------------------------------- Corrections -------------------------------
+
+# dont correct arguments to dot-files
+CORRECT_IGNORE='[._]*'
+CORRECT_IGNORE_FILE='[._]*'
+
 #---------------------------------- Prediction --------------------------------
 
 autoload predict-on
