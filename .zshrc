@@ -416,6 +416,8 @@ bindkey "\e[B" down-line-or-local-history
 
 # Use interactive sudo instead of su
 alias su="sudo -u root -i"
+# disable sudo correction for commands
+alias sudo="nocorrect sudo"
 
 #---------------------------------- Maven ------------------------------------
 # Coloring maven output
