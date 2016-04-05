@@ -535,6 +535,12 @@ for command in find wget; \
 # load zsh extended move
 autoload -Uz zmv
 
+#---------------------------------- Machine specific --------------------------
+
+if [[ -r $HOME/.zlocal ]]; then
+    source $HOME/.zlocal
+fi
+
 #---------------------------------- Post Setup --------------------------------
 
 # at last initialize completion
@@ -549,9 +555,4 @@ store_last_return_value() {
 # This must be exactly first precmd function, because other precmd might modify $?
 precmd_functions=(store_last_return_value $precmd_functions)
 
-#---------------------------------- Machine specific --------------------------
-
-if [[ -r $HOME/.zlocal ]]; then
-    source $HOME/.zlocal
-fi
 
