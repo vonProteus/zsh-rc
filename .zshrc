@@ -212,6 +212,14 @@ prompt_host() {
   fi
 }
 
+# Makefile exists
+prompt_makefile() {
+  if [[ -f Makefile ]]; then
+    print -n "make"
+  fi
+}
+
+
 # Status:
 # - was there an error
 # - are there background jobs?
@@ -247,6 +255,7 @@ prompt_forward() {
 prompt_backward() {
   CURRENT_BG='NONE'
   prompt_segment backward magenta black   "$MAVEN_PROJECT"   # prompt maven project
+  prompt_segment backward cyan    black   "$(prompt_makefile)"
   prompt_segment backward yellow  black   "$vcs_info_msg_0_" # prompt vcs
   prompt_segment backward green   black   "%T"      # prompt time
   prompt_clear
