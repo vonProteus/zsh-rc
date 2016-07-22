@@ -448,6 +448,26 @@ alias su="sudo -u root -i"
 # disable sudo correction for commands
 alias sudo="nocorrect sudo"
 
+#---------------------------------- VIM pager --------------------------------
+
+vim_pager() {
+	local source_file;
+	if [ ! -t 1 ]; then
+		echo "Cannot use vim pager with non-terminal output" 1>&2
+		return 1
+	fi
+	if [ $# -gt 0 ]; then
+		source_file="$@";
+	elif [ ! -t 0 ]; then
+		source_file="-";
+	else
+		echo "Input stream or file name missing" 1>&2
+		return 2
+	fi
+	vim --cmd 'let no_plugin_maps = 1' -c 'runtime! macros/less.vim' $source_file
+}
+alias vless='vim_pager'
+
 #---------------------------------- Maven ------------------------------------
 # Read project information from current directory - needed for prompt
 
