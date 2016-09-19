@@ -448,6 +448,10 @@ alias su="sudo -u root -i"
 # disable sudo correction for commands
 alias sudo="nocorrect sudo"
 
+# Shortcuts for clipboard manipulation
+alias xclip-in='xclip -selection c -in'
+alias xclip-out='xclip -selection c -out'
+
 #---------------------------------- VIM pager --------------------------------
 
 vim_pager() {
