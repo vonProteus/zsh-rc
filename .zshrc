@@ -60,7 +60,7 @@ find_up () {
 }
 
 command-exists () {
-  return [[ -n $commands[$1] ]];
+  return $(command -v $1 >/dev/null);
 }
 
 #---------------------------------- Tab completion ----------------------------
