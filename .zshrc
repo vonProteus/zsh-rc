@@ -59,6 +59,10 @@ find_up () {
   done
 }
 
+command-exists () {
+  return [[ -n $commands[$1] ]];
+}
+
 #---------------------------------- Tab completion ----------------------------
 
 # Force a reload of completion system if nothing matched; this fixes installing
@@ -215,7 +219,10 @@ prompt_root() {
 
 # Different username
 prompt_user() {
-  local user=$(whoami)
+  local user=$USER
+  if command-exists whoami && [[ -z $user ]] then
+    user=$(whoami)
+  fi
   if [[ "$user" != "$DEFAULT_USER" && $UID -ne 0 ]]; then
     print -n $user
   fi
@@ -334,7 +341,9 @@ case $(uname -s) in
         LSOPTS="${LSOPTS} -G"
         ;;
     Linux)
-        eval "$(dircolors -b)"
+        if command-exists dircolors; then
+            eval "$(dircolors -b)"
+	    fi
         LSOPTS="$LSOPTS --color=auto"
         LLOPTS="$LLOPTS --color=always"  # so | less is colored
 
