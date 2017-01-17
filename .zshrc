@@ -306,7 +306,7 @@ prompt_precmd() {
   SPROMPT="Correct %{%F{red}%}%R%{%f%} to %{%F{green}%}%r%f? [%Uy%ues|%Un%uo|%Ua%ubort|%Ue%udit] "
 }
 
-ZLE_RPROMPT_INDENT=0
+ZLE_RPROMPT_INDENT=1
 prompt_opts=(cr subst percent)
 
 add-zsh-hook precmd prompt_precmd
