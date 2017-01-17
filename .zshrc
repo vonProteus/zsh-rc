@@ -473,6 +473,16 @@ alias su="sudo -u root -i"
 # disable sudo correction for commands
 alias sudo="nocorrect sudo"
 
+# More powerful terminal reset
+#   \e< - resets \e[?2l which puts terminal into VT52 mode
+#   reset - normal terminal reset
+#   stty sane - puts tty in sane state (like accepting input, no character translation etc.)
+#   setterm -reset - puts reset terminal string, as identified by setterm
+#   tput reset - puts terminal reset strings from terminfo
+#   clear - simple clear terminal window
+#   \033c - exactly "<ESC>c" which is VT100 code for resetting terminal
+alias reset='echo -e "\e<"; reset; stty sane; setterm -reset; tput reset; clear; echo -e "\033c"'
+
 # Shortcuts for clipboard manipulation
 alias xclip-in='xclip -selection c -in'
 alias xclip-out='xclip -selection c -out'
