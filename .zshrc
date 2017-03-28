@@ -487,6 +487,9 @@ alias reset='echo -e "\e<"; reset; stty sane; setterm -reset; tput reset; clear;
 alias xclip-in='xclip -selection c -in'
 alias xclip-out='xclip -selection c -out'
 
+# Git manages its own globs
+alias git='noglob git'
+
 #---------------------------------- VIM pager --------------------------------
 
 vim_pager() {
