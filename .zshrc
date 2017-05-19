@@ -334,24 +334,15 @@ zstyle ':vcs_info:git*' stagedstr "$CHANGES_CHARACTER"
 
 #---------------------------------- Listings ----------------------------------
 
-LSOPTS='-lAvF'  # long mode, show all, natural sort, type squiggles, friendly sizes
-LLOPTS=''
-case $(uname -s) in
-    FreeBSD)
-        LSOPTS="${LSOPTS} -G"
-        ;;
-    Linux)
-        if command-exists dircolors; then
-            eval "$(dircolors -b)"
-	    fi
-        LSOPTS="$LSOPTS --color=auto"
-        LLOPTS="$LLOPTS --color=always"  # so | less is colored
+if command-exists dircolors; then
+    eval "$(dircolors -b)"
+fi
+LSOPTS="-lAvF --color=auto" # long mode, show all, natural sort, type squiggles, friendly sizes
+LLOPTS="--color=always"  # so | less is colored
 
-        # Just loaded new ls colors via dircolors, so change completion colors
-        # to match
-        zstyle ':completion:*:default' list-colors ${(s.:.)LS_COLORS}
-        ;;
-esac
+# Just loaded new ls colors via dircolors, so change completion colors to match
+zstyle ':completion:*:default' list-colors ${(s.:.)LS_COLORS}
+
 alias ls="ls $LSOPTS"
 alias ll="ls $LLOPTS | less -FX"
 
