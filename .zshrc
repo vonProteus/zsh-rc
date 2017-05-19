@@ -63,6 +63,17 @@ command-exists () {
   return $(command -v $1 >/dev/null);
 }
 
+#---------------------------------- Listings ----------------------------------
+
+if command-exists dircolors; then
+    eval "$(dircolors -b)"
+fi
+LSOPTS="-lAvF --color=auto" # long mode, show all, natural sort, type squiggles, friendly sizes
+LLOPTS="--color=always"  # so | less is colored
+
+alias ls="ls $LSOPTS"
+alias ll="ls $LLOPTS | less -FX"
+
 #---------------------------------- Tab completion ----------------------------
 
 # Force a reload of completion system if nothing matched; this fixes installing
@@ -74,7 +85,7 @@ _force_rehash() {
 
 # Always use menu completion, and make the colors pretty!
 zstyle ':completion:*' menu select yes
-zstyle ':completion:*:default' list-colors ''
+zstyle ':completion:*:default' list-colors ${(s.:.)LS_COLORS}
 
 # Completers to use: rehash, general completion, then various magic stuff and
 # spell-checking.  Only allow two errors when correcting
@@ -331,20 +342,6 @@ zstyle ':vcs_info:git*' formats "%s $BRANCH_CHARACTER%b%u"
 zstyle ':vcs_info:git*' actionformats "%s $BRANCH_CHARACTER%b%u [%a]"
 zstyle ':vcs_info:git*' unstagedstr "$UNSTAGED_CHARACTER"
 zstyle ':vcs_info:git*' stagedstr "$CHANGES_CHARACTER"
-
-#---------------------------------- Listings ----------------------------------
-
-if command-exists dircolors; then
-    eval "$(dircolors -b)"
-fi
-LSOPTS="-lAvF --color=auto" # long mode, show all, natural sort, type squiggles, friendly sizes
-LLOPTS="--color=always"  # so | less is colored
-
-# Just loaded new ls colors via dircolors, so change completion colors to match
-zstyle ':completion:*:default' list-colors ${(s.:.)LS_COLORS}
-
-alias ls="ls $LSOPTS"
-alias ll="ls $LLOPTS | less -FX"
 
 #---------------------------------- Screen ------------------------------------
 
