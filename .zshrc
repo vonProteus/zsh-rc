@@ -475,9 +475,6 @@ alias reset='echo -e "\e<"; reset; stty sane; setterm -reset; tput reset; clear;
 alias xclip-in='xclip -selection c -in'
 alias xclip-out='xclip -selection c -out'
 
-# Git manages its own globs
-alias git='noglob git'
-
 #---------------------------------- VIM pager --------------------------------
 
 vim_pager() {
@@ -562,8 +559,8 @@ REPORTTIME=5
 
 TIMEFMT=$(echo "$fg[green]${SEGMENT_SEPARATOR_BACKWARD}$bg[green]$fg[black] %*Es $fg[yellow]$SEGMENT_SEPARATOR_BACKWARD$bg[yellow]$fg[black] %P $reset_color")
 
-# Don't glob with find or wget
-for command in find wget; \
+# Don't glob with commands that expects glob patterns
+for command in find wget git; \
     alias $command="noglob $command"
 
 # load zsh extended move
