@@ -576,7 +576,11 @@ fi
 
 # at last initialize completion
 autoload -Uz compinit
-compinit
+if [[ -n ${ZDOTDIR}/.zcompdump(#qN.mh+24) ]]; then
+  compinit
+else
+  compinit -C
+fi
 
 store_last_return_value() {
 	LAST_RETURN_VALUE="$?"
