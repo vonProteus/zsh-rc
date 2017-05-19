@@ -125,10 +125,10 @@ zstyle ':completion::*:kill:*:processes' list-colors '=(#b) #([0-9]#)*=0=01;32'
 # sudo completion
 zstyle ':completion:*:sudo:*' command-path append /sbin /usr/sbin
 
-list-ssh-hosts() { [[ -f $HOME/.ssh/config ]] && print -n $(cat $HOME/.ssh/config | sed '/^Host /!d;s/Host *\([^ \#]\+\)/\1/') }
+SSH_HOSTS=($([[ -f $HOME/.ssh/config ]] && print -n $(cat $HOME/.ssh/config | sed '/^Host [^*]/!d;s/Host *\([^ \#]\+\)/\1/' | sort)))
 
-zstyle ':completion:*:ssh:*' hosts $(list-ssh-hosts)
-zstyle ':completion:*:scp:*' hosts $(list-ssh-hosts)
+zstyle ':completion:*:ssh:*' hosts $SSH_HOSTS
+zstyle ':completion:*:scp:*' hosts $SSH_HOSTS
 zstyle ':completion:*:ssh:*' users # disables users completion
 zstyle ':completion:*:scp:*' users # disables users completion
 
