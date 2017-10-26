@@ -5,6 +5,9 @@
 #
 #---------------------------------- Pre Setup ---------------------------------
 
+# Source this file in your .zshrc:
+# source $HOME/.zsh/zshrc
+
 autoload colors; colors
 
 autoload -Uz add-zsh-hook
