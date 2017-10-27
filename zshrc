@@ -1,8 +1,7 @@
 # vim: ft=zsh
 #
-# Source at https://github.com/nivertius/zsh-rc/
-# Download Powerline-patched fonts from
-#    https://github.com/powerline/fonts
+# Download Patched fonts from
+# https://github.com/gabrielelana/awesome-terminal-fonts/tree/patching-strategy/patched
 #
 #---------------------------------- Pre Setup ---------------------------------
 
@@ -21,15 +20,15 @@ if [[ -n $(echo '\u2603' 2>/dev/null) ]] then
 fi
 
 if [[ -n $MULTIBYTE_SUPPORTED ]] then
-  UNSTAGED_CHARACTER="\u26a1"
-  CHANGES_CHARACTER="\u00b1"
-  BRANCH_CHARACTER="\ue0a0"
-  DETACHED_CHARACTER="\u27a6"
-  REVISION_CHARACTER="\u2022"
-  FAILED_CHARACTER="\u2718"
-  SUCCESS_CHARACTER="\u2714"
-  SUPERUSER_CHARACTER="\u26a1"
-  JOBS_CHARACTER="\u2699"
+  UNSTAGED_CHARACTER="\ue11d"
+  CHANGES_CHARACTER="\ue83a"
+  BRANCH_CHARACTER="\ue822"
+  DETACHED_CHARACTER="\ue899"
+  REVISION_CHARACTER="\ue821"
+  FAILED_CHARACTER="\ue125"
+  SUCCESS_CHARACTER="\ue124"
+  SUPERUSER_CHARACTER="\ue22b"
+  JOBS_CHARACTER="\ue12a"
   NO_JOBS_CHARACTER="\u2022"
   SEGMENT_SEPARATOR_FORWARD="\ue0b0"
   SEGMENT_SEPARATOR_BACKWARD="\ue0b2"
@@ -343,8 +342,8 @@ zstyle ':vcs_info:*' branchformat '%b'
 zstyle ':vcs_info:hg*' unstagedstr "$CHANGES_CHARACTER"
 zstyle ':vcs_info:hg*' hgrevformat "%r" # default "%r:%h"
 
-zstyle ':vcs_info:git*' formats "%s $BRANCH_CHARACTER%b%u"
-zstyle ':vcs_info:git*' actionformats "%s $BRANCH_CHARACTER%b%u [%a]"
+zstyle ':vcs_info:git*' formats "$BRANCH_CHARACTER%b %u" # git is standard
+zstyle ':vcs_info:git*' actionformats "$BRANCH_CHARACTER%b %u [%a]"
 zstyle ':vcs_info:git*' unstagedstr "$UNSTAGED_CHARACTER"
 zstyle ':vcs_info:git*' stagedstr "$CHANGES_CHARACTER"
 
