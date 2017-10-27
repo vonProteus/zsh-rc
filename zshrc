@@ -1,3 +1,4 @@
+# vim: ft=zsh
 #
 # Source at https://github.com/nivertius/zsh-rc/
 # Download Powerline-patched fonts from
