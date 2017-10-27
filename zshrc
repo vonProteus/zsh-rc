@@ -342,10 +342,10 @@ zstyle ':vcs_info:*' branchformat '%b'
 zstyle ':vcs_info:hg*' unstagedstr "$CHANGES_CHARACTER"
 zstyle ':vcs_info:hg*' hgrevformat "%r" # default "%r:%h"
 
-zstyle ':vcs_info:git*' formats "$BRANCH_CHARACTER%b %u" # git is standard
-zstyle ':vcs_info:git*' actionformats "$BRANCH_CHARACTER%b %u [%a]"
-zstyle ':vcs_info:git*' unstagedstr "$UNSTAGED_CHARACTER"
-zstyle ':vcs_info:git*' stagedstr "$CHANGES_CHARACTER"
+zstyle ':vcs_info:git*' formats "$BRANCH_CHARACTER%b%u%c" # git is standard
+zstyle ':vcs_info:git*' actionformats "$BRANCH_CHARACTER%b%u%c [%a]"
+zstyle ':vcs_info:git*' unstagedstr " $UNSTAGED_CHARACTER"
+zstyle ':vcs_info:git*' stagedstr " $CHANGES_CHARACTER"
 
 #---------------------------------- Screen ------------------------------------
 
