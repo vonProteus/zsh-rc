@@ -65,6 +65,7 @@ find_up () {
 command-exists () {
   return $(command -v $1 >/dev/null);
 }
+NEWLINE=$'\n'
 
 #---------------------------------- Listings ----------------------------------
 
@@ -530,12 +531,31 @@ sshc() {
 	local source target
 	source=${ZDOTDIR:-$HOME}
 	target="/tmp/.zdot-${RANDOM}"
+	consolidate-config
 	ssh -q -o "ControlPath=/tmp/.cm-%r@%h:%p" -o "ControlMaster=yes" -o "ControlPersist=yes" $1 'false'
 	ssh -q -o "ControlPath=/tmp/.cm-%r@%h:%p" $1 "mkdir $target"
-	scp -q -o "ControlPath=/tmp/.cm-%r@%h:%p" $source/.zshrc $1:$target/.zshrc
+	scp -q -o "ControlPath=/tmp/.cm-%r@%h:%p" $source/.zshrc-consolidated $1:$target/.zshrc
 	ssh -q -o "ControlPath=/tmp/.cm-%r@%h:%p" $1 -t "ZDOTDIR=$target exec zsh -l"
 	ssh -q -o "ControlPath=/tmp/.cm-%r@%h:%p" $1 "rm -r $target"
 	ssh -q -o "ControlPath=/tmp/.cm-%r@%h:%p" -O stop $1 
+}
+
+consolidate-config() {
+	local initial final
+	initial=${ZDOTDIR:-$HOME}/.zshrc
+	final=${ZDOTDIR:-$HOME}/.zshrc-consolidated
+	cp $initial $final
+	while true; do
+		found=$(grep -oP '^source \K.*$' $final)
+		if [[ -z $found ]]; then
+			break;
+		fi
+		replaced=${(e)found}
+		if [[ $replaced != /* ]]; then
+			replaced=$(dirname $final)/$replaced
+		fi
+		sed -i "\#^source $found\$# r $replaced${NEWLINE}d" $final
+	done
 }
 
 #---------------------------------- Miscellaneous ---------------------------- 
