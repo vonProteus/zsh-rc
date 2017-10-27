@@ -30,6 +30,8 @@ if [[ -n $MULTIBYTE_SUPPORTED ]] then
   SUPERUSER_CHARACTER="\ue22b"
   JOBS_CHARACTER="\ue12a"
   NO_JOBS_CHARACTER="\u2022"
+  AHEAD_CHARACTER="\ue174 "
+  BEHIND_CHARACTER="\ue175 "
   SEGMENT_SEPARATOR_FORWARD="\ue0b0"
   SEGMENT_SEPARATOR_BACKWARD="\ue0b2"
 else
@@ -43,6 +45,8 @@ else
   SUPERUSER_CHARACTER="#"
   JOBS_CHARACTER="O"
   NO_JOBS_CHARACTER="."
+  AHEAD_CHARACTER="+"
+  BEHIND_CHARACTER="-"
   SEGMENT_SEPARATOR_FORWARD=""
   SEGMENT_SEPARATOR_BACKWARD=""
 fi
@@ -342,13 +346,23 @@ zstyle ':vcs_info:*' branchformat '%b'
 zstyle ':vcs_info:hg*' unstagedstr "$CHANGES_CHARACTER"
 zstyle ':vcs_info:hg*' hgrevformat "%r" # default "%r:%h"
 
-zstyle ':vcs_info:git*' formats "$BRANCH_CHARACTER%b%u%c" # git is standard
-zstyle ':vcs_info:git*' actionformats "$BRANCH_CHARACTER%b%u%c [%a]"
+zstyle ':vcs_info:git*' formats "$BRANCH_CHARACTER%b%u%c%m" # git is standard
+zstyle ':vcs_info:git*' actionformats "$BRANCH_CHARACTER%b%u%c%m [%a]"
 zstyle ':vcs_info:git*' unstagedstr " $UNSTAGED_CHARACTER"
 zstyle ':vcs_info:git*' stagedstr " $CHANGES_CHARACTER"
 
-#---------------------------------- Screen ------------------------------------
+zstyle ':vcs_info:git*+set-message:*' hooks git-st
+function +vi-git-st() {
+    local ahead behind
+    local -a branchstatus
+    ahead=$(git rev-list ${hook_com[branch]}@{upstream}..HEAD 2>/dev/null | wc -l)
+    (( $ahead )) && branchstatus+=( " $AHEAD_CHARACTER${ahead}" )
+    behind=$(git rev-list HEAD..${hook_com[branch]}@{upstream} 2>/dev/null | wc -l)
+    (( $behind )) && branchstatus+=( " $BEHIND_CHARACTER${behind}" )
+    hook_com[misc]="${(j::)branchstatus}"
+}
 
+#---------------------------------- Screen ------------------------------------
 
 function title {
     # param: title to use
