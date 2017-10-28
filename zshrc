@@ -20,8 +20,9 @@ if [[ -n $(echo '\u2603' 2>/dev/null) ]] then
 fi
 
 if [[ -n $MULTIBYTE_SUPPORTED ]] then
-  UNSTAGED_CHARACTER="\ue11d"
-  CHANGES_CHARACTER="\ue83a"
+  UNSTAGED_CHARACTER="\ue168"
+  CHANGES_CHARACTER="\ue16b"
+  UNTRACKED_CHARACTER="\ue16c"
   BRANCH_CHARACTER="\ue822"
   DETACHED_CHARACTER="\ue899"
   REVISION_CHARACTER="\ue821"
@@ -38,6 +39,7 @@ if [[ -n $MULTIBYTE_SUPPORTED ]] then
 else
   UNSTAGED_CHARACTER="!"
   CHANGES_CHARACTER="*"
+  UNTRACKED_CHARACTER="?"
   BRANCH_CHARACTER="~"
   DETACHED_CHARACTER="%"
   REVISION_CHARACTER="r"
@@ -353,8 +355,9 @@ zstyle ':vcs_info:git*' actionformats "$BRANCH_CHARACTER%b%u%c%m $ACTIONS_CHARAC
 zstyle ':vcs_info:git*' unstagedstr " $UNSTAGED_CHARACTER"
 zstyle ':vcs_info:git*' stagedstr " $CHANGES_CHARACTER"
 
-zstyle ':vcs_info:git*+set-message:*' hooks git-st
-function +vi-git-st() {
+zstyle ':vcs_info:git*+set-message:*' hooks git-additional
+
+function +vi-git-additional() {
     local ahead behind
     local -a branchstatus
     ahead=$(git rev-list ${hook_com[branch]}@{upstream}..HEAD 2>/dev/null | wc -l)
@@ -362,6 +365,10 @@ function +vi-git-st() {
     behind=$(git rev-list HEAD..${hook_com[branch]}@{upstream} 2>/dev/null | wc -l)
     (( $behind )) && branchstatus+=( " $BEHIND_CHARACTER${behind}" )
     hook_com[misc]="${(j::)branchstatus}"
+    if [[ $(git rev-parse --is-inside-work-tree 2> /dev/null) == 'true' && \
+            -n $(git status --porcelain | grep -E '^\?\?' 2> /dev/null | tail -n1) ]]; then
+        hook_com[unstaged]+=" $UNTRACKED_CHARACTER"
+    fi
 }
 
 #---------------------------------- Screen ------------------------------------
