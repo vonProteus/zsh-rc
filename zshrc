@@ -612,6 +612,12 @@ for command in find wget git; \
 # load zsh extended move
 autoload -Uz zmv
 
+#---------------------------------- Addons ------------------------------------
+
+if [[ -d ${ZDOTDIR:-$HOME}/.zsh/zsh-syntax-highlighting ]]; then
+	source ${ZDOTDIR:-$HOME}/.zsh/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+fi
+
 #---------------------------------- Machine specific --------------------------
 
 if [[ -r $HOME/.zlocal ]]; then
