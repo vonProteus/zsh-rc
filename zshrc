@@ -459,8 +459,15 @@ bindkey "\e[H" beginning-of-line
 bindkey "\e[F" end-of-line
 
 # Tab completion
+expand-or-complete-with-indicator() {
+	print -Pn "%{%F{red}...%f%}"
+	zle expand-or-complete
+	zle redisplay
+}
+zle -N expand-or-complete-with-indicator
+bindkey "^I" expand-or-complete-with-indicator
+
 bindkey "^r" history-incremental-search-backward
-bindkey '^i' complete-word              # tab to do menu
 bindkey "\e[Z" reverse-menu-complete    # shift-tab to reverse menu
 
 # Up/down arrow.
