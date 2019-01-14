@@ -80,11 +80,12 @@ NEWLINE=$'\n'
 if command-exists dircolors; then
     eval "$(dircolors -b)"
 fi
-LSOPTS="-lAvF --color=auto" # long mode, show all, natural sort, type squiggles, friendly sizes
-LLOPTS="--color=always"  # so | less is colored
-
-alias ls="ls $LSOPTS"
-alias ll="ls $LLOPTS | less -FX"
+if command-exists exa; then
+    alias ls='exa --git --long --all --extended --time-style long-iso'
+else
+    LSOPTS="-lAvF --color=auto" # long mode, show all, natural sort, type squiggles, friendly sizes
+    alias ls="ls $LSOPTS"
+fi;
 
 #---------------------------------- Tab completion ----------------------------
 
