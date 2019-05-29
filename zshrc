@@ -511,6 +511,9 @@ alias reset='echo -e "\e<"; reset; stty sane; setterm -reset; tput reset; clear;
 alias xclip-in='xclip -selection c -in'
 alias xclip-out='xclip -selection c -out'
 
+# Standard bd usage
+alias bd=". bd -si"
+
 #---------------------------------- VIM pager --------------------------------
 
 vim_pager() {
