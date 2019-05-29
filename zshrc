@@ -302,6 +302,7 @@ prompt_forward() {
 prompt_backward() {
   CURRENT_BG='NONE'
   prompt_segment backward magenta black   "$MAVEN_PROJECT"   # prompt maven project
+  prompt_segment backward cyan    black   "$PACKAGE_JSON_PROJECT"   # prompt package.json project
   prompt_segment backward cyan    black   "$(prompt_makefile)"
   prompt_segment backward yellow  black   "$vcs_info_msg_0_" # prompt vcs
   prompt_segment backward green   black   "%T"      # prompt time
@@ -555,6 +556,22 @@ maven_read_project() {
 }
 
 add-zsh-hook chpwd maven_read_project
+
+#---------------------------------- package.json ------------------------------------
+# Read project information from current directory - needed for prompt
+
+package_json_read_project() {
+	local location parts
+	location=$(find_up package.json)
+	if [[ ! -r "$location" || -z $commands[jq] ]]; then
+		PACKAGE_JSON_PROJECT=""
+		return 1;
+	fi
+	PACKAGE_JSON_PROJECT=$(jq -r '.name + "@" + .version' $location)
+}
+
+add-zsh-hook chpwd package_json_read_project
+
 
 #---------------------------------- Copy zshrc remote -------------------------
 
