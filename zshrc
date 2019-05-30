@@ -278,7 +278,7 @@ prompt_status() {
   else
     symbols+="%{%F{green}%}$SUCCESS_CHARACTER%{%f%}"
   fi
-  if [[ $(jobs -l | wc -l) -gt 0 ]]; then
+  if [[ $(jobs -l) ]]; then
     symbols+="%{%F{cyan}%}$JOBS_CHARACTER%{%f%}"
   else
     symbols+="%{%F{white}%}$NO_JOBS_CHARACTER%{%f%}"
