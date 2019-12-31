@@ -670,4 +670,9 @@ store_last_return_value() {
 # This must be exactly first precmd function, because other precmd might modify $?
 precmd_functions=(store_last_return_value $precmd_functions)
 
+# If kubectl is present, load completions from it.
+# This must be done after compinit was called
+if [[ $commands[kubectl] ]]; then
+  source <(kubectl completion zsh);
+fi
 
